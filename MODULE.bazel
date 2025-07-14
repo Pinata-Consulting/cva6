@@ -28,10 +28,14 @@ use_repo(pip, "cva6-pip")
 bazel_dep(name = "bazel-orfs")
 
 # To bump version, run: bazelisk run @bazel-orfs//:bump
-git_override(
+# git_override(
+#     module_name = "bazel-orfs",
+#     commit = "34b6855af420bc9fed5ffb78862f548abf79ede1",
+#     remote = "https://github.com/The-OpenROAD-Project/bazel-orfs.git",
+# )
+local_path_override(
     module_name = "bazel-orfs",
-    commit = "34b6855af420bc9fed5ffb78862f548abf79ede1",
-    remote = "https://github.com/The-OpenROAD-Project/bazel-orfs.git",
+    path = "../bazel-orfs",
 )
 
 orfs = use_extension("@bazel-orfs//:extension.bzl", "orfs_repositories")

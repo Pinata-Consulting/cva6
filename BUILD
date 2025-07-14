@@ -2,6 +2,22 @@ load("@bazel-orfs//:openroad.bzl", "orfs_flow")
 
 TARGET_CFGS = {
     "cv32a60x": {
+        # The SRAMs have been identified by doing a build with the behavioral model SRAMs
+        # which will then fail because there are SRAMs inferred that exceed SYNTH_MEMORY_MAX_BITS
+        # and list all SRAM by bits in descending order.
+        #
+        # With SYNTH_MINIMUM_KEEP_SIZE=0 we don't flatten any modules and get a more accurate
+        # report.
+        # ---
+        # Memories found in the design:
+        #  Rows | Width |   Bits | Module               | Instances
+        # ---------------------------------------------------------------------------------------------------------------------------------
+        #   128 |    64 |   8192 | hpdcache_sram_wbyteenable_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.hpdcache_sram_wbyteenable$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.ram_i
+        #   128 |    64 |   8192 | hpdcache_sram_wbyteenable_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.hpdcache_sram_wbyteenable$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.ram_i
+        #    64 |    28 |   1792 | hpdcache_sram_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.hpdcache_sram$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i
+        #    64 |    28 |   1792 | hpdcache_sram_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.hpdcache_sram$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.ram_i
+        # ...
+        # Error: Synthesized memory size 1024 exceeds SYNTH_MEMORY_MAX_BITS
         "hpdcache_sram_1rw": {
             "name": "hpdcache_sram_1rw\\$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i",
             "rows": 64,
@@ -13,26 +29,20 @@ TARGET_CFGS = {
             "width": 64,
         },
     },
-    "cv32a65x": {},
+    "cv32a65x": {
+        "hpdcache_sram_1rw": {
+            "name": "hpdcache_sram_1rw\\$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i",
+            "rows": 64,
+            "width": 28,
+        },
+        "hpdcache_sram_wbyteenable_1rw": {
+            "name": "hpdcache_sram_wbyteenable_1rw\\$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.ram_i",
+            "rows": 128,
+            "width": 64,
+        },
+    },
     "cv64a6_mmu": {},
 }
-
-# The SRAMs have been identified by doing a build with the behavioral model SRAMs
-# which will then fail because there are SRAMs inferred that exceed SYNTH_MEMORY_MAX_BITS
-# and list all SRAM by bits in descending order.
-#
-# With SYNTH_MINIMUM_KEEP_SIZE=0 we don't flatten any modules and get a more accurate
-# report.
-# ---
-# Memories found in the design:
-#  Rows | Width |   Bits | Module               | Instances
-# ---------------------------------------------------------------------------------------------------------------------------------
-#   128 |    64 |   8192 | hpdcache_sram_wbyteenable_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.hpdcache_sram_wbyteenable$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[0].gen_data_sram_wbyteenable.data_sram.ram_i
-#   128 |    64 |   8192 | hpdcache_sram_wbyteenable_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.hpdcache_sram_wbyteenable$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_data_sram_row[0].gen_data_sram_col[1].gen_data_sram_wbyteenable.data_sram.ram_i
-#    64 |    28 |   1792 | hpdcache_sram_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.hpdcache_sram$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[0].dir_sram.ram_i
-#    64 |    28 |   1792 | hpdcache_sram_1rw$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.ram_i | cva6.gen_cache_hpd.i_cache_subsystem.cva6_hpdcache_subsystem$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.cva6_hpdcache_wrapper$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_ctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.hpdcache_memctrl$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.hpdcache_sram$cva6.gen_cache_hpd.i_cache_subsystem.i_dcache.i_hpdcache.hpdcache_ctrl_i.hpdcache_memctrl_i.gen_dir_sram[1].dir_sram.ram_i
-# ...
-# Error: Synthesized memory size 1024 exceeds SYNTH_MEMORY_MAX_BITS
 
 SRAMS = {
     # Used behavioral model to mock sram macros
@@ -262,7 +272,10 @@ filegroup(
         "core/pmp/src/pmp_data_if.sv",
         "common/local/util/tc_sram_wrapper.sv",
         "common/local/util/tc_sram_wrapper_cache_techno.sv",
-        "vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv",
+        # Yosys doesn't recognize this SRAM
+        # "vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv",
+        # Use this stripped down version instead, which yosys recognizes
+        "bazel/tc_sram.sv",
         "common/local/util/sram.sv",
         "common/local/util/sram_cache.sv",
         "core/cva6_mmu/cva6_mmu.sv",
@@ -309,5 +322,11 @@ filegroup(
         "core/cache_subsystem/hpdcache/rtl/src/hpdcache_victim_sel.sv",
         "core/cache_subsystem/hpdcache/rtl/src/hpdcache_wbuf.sv",
         "core/cache_subsystem/hpdcache/rtl/src/hpdcache_flush.sv",
-    ] + SRAMS.values(),
+    ] +
+    #  [
+    #     "core/cache_subsystem/hpdcache/rtl/src/common/macros/behav/hpdcache_sram_1rw.sv",
+    #     "core/cache_subsystem/hpdcache/rtl/src/common/macros/behav/hpdcache_sram_wbyteenable_1rw.sv",
+    #     "core/cache_subsystem/hpdcache/rtl/src/common/macros/behav/hpdcache_sram_wmask_1rw.sv",
+    # ],
+    SRAMS.values(),
 ) for TARGET_CFG, srams in TARGET_CFGS.items()]
